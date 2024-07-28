@@ -1,0 +1,168 @@
+<!-- A BACK UP THIS FILE IS STORED AT https://usaf.dps.mil/sites/osan/51FW/51MSG/51CS/SiteAssets/html/Homepage%20Backups/ (under "LeadershipCarousel") PLEASE KEEP THIS BACKUP UPDATED IF YOU FINALIZE ANY CHANGES -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .mySlides {
+            display: none;
+        }
+
+        .active {
+            display: block !important;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .active-dot {
+            background-color: #717171;
+        }
+    </style>
+    <title>Leadership Carousel</title>
+</head>
+
+<body>
+    <div id="slideshow-container"></div>
+    <div id="slideshow-ball"></div>
+
+    <script>
+        let leadership = [
+            {
+                name: "Lt Col Rachel Reynolds",
+                position: "Commander",
+                image: "https://usaf.dps.mil/sites/kadena/18MSG/18CS/PublishingImages/SitePages/Home/reynolds%20pic.PNG",
+                bio: "https://usaf.dps.mil/:b:/r/sites/kadena/18MSG/18CS/Bios/Reynolds%20Bio%202023.pdf?csf=1&web=1&e=PGrSYx"
+            },
+            {
+                name: "CMSgt Ryan McCauley",
+                position: "Chief Enlisted Manager",
+                image: "https://usaf.dps.mil/sites/kadena/18MSG/18CS/PublishingImages/SitePages/Home/McCauley%20Ryan%20CMSgt%208x10.jpg",
+                bio: "#"
+            },
+            {
+                name: "MSgt Richard Cullen",
+                position: "First Sergeant",
+                image: "https://usaf.dps.mil/sites/kadena/18MSG/18CS/SiteAssets/Site%20images/no%20photo%20available%20pic.jpg",
+                bio: "#"
+            },
+        ]
+
+        /**
+         * Returns the HTML for a leadership card.
+         * 
+         * @param {number} index - The index of the leadership member.
+         * @param {string} newIndex - The index of the leadership member, formatted as "index / total".
+         * @param {string} name - The name of the leadership member.
+         * @param {string} position - The position of the leadership member.
+         * @param {string} image - The URL of the leadership member's image.
+         * @param {string} bio - The URL of the leadership member's bio.
+         * @returns {string} The HTML for the leadership card.
+         */
+        let cardTemplate = (index, newIndex, name, position, image, bio) => {
+            // Create the HTML for the leadership card.
+            return (
+                `<div class="mySlides fade" id='container-${index}' style="display:none">
+                    <!-- Display the index of the leadership member -->
+                    <div class="numbertext">${newIndex}</div>
+                    <!-- Link to the leadership member's bio -->
+                    <a href="${bio}">
+                        <!-- Display the leadership member's image -->
+                        <img class="carouselImg" src="${image}" style="width:100%" height=auto>
+                    </a>
+                    <!-- Display the name of the leadership member -->
+                    <div class="carouselHeading">${name}</div>
+                    <!-- Display the position of the leadership member -->
+                    <div class="carouselText">${position}</div>
+                </div>`
+            );
+        }
+
+        // Set variables to get the contianer and ball contaiers
+        // This will be used to create the inner html
+        let container = document.getElementById('slideshow-container');
+        let ball = document.getElementById('slideshow-ball');
+
+        /**
+         * Retrieves the container element with the specified index.
+         *
+         * @param {number} index - The index of the container element.
+         * @return {HTMLElement} The container element with the specified index.
+         * 
+         * Retrieve the container element with the specified index.
+         * The index is used to construct the ID of the container element.
+         * The retrieved element is then returned.
+         */
+        let containerItem = (index) => document.getElementById(`container-${index}`);
+        let ballItem = (index) => document.getElementById(`ball-${index}`);
+
+        /**
+         * Initialize the main slideshow with the leadership data.
+         * This function iterates over the leadership array and generates the HTML for each member
+         * of the leadership team. The generated HTML is then appended to the container element.
+         * Additionally, a dot is added to the ball element for each member of the leadership team.
+         */
+        let mainInit = () => {
+            // Iterate over each member of the leadership team
+            leadership.forEach(({ name, position, image, bio }, index) => {
+                // Generate the index for the new slide
+                let newIndex = `${index + 1} / ${leadership.length}`;
+
+                // Generate the HTML for the new slide
+                let newSlide = cardTemplate(index, newIndex, name, position, image, bio);
+
+                // Append the new slide to the container element
+                container.innerHTML += newSlide;
+
+                // Add a dot to the ball element for the new slide
+                ball.innerHTML += `<span class="dot" id='ball-${index}'></span>`;
+            });
+        };
+        mainInit();
+
+        //
+        let currentIndex = 0;
+
+        /**
+         * Shows the next card in the leadership slideshow.
+         *
+         * This function hides all cards, removes the "active-dot" class from all dots,
+         * shows the current card, and adds the "active-dot" class to the corresponding dot.
+         * It wraps around to the beginning of the leadership array if the current index is at the end.
+         */
+        let showNextCard = () => {
+            // Hide all cards
+            for (let i = 0; i < leadership.length; i++) {
+                // Hide the card at index i
+                containerItem(i).style.display = "none";
+                // Remove the "active-dot" class from the dot at index i
+                ballItem(i).classList.remove("active-dot");
+            }
+
+            // Show the current card
+            containerItem(currentIndex).style.display = "block";
+            // Add the "active-dot" class to the dot corresponding to the current card
+            ballItem(currentIndex).classList.add("active-dot");
+
+            // Increment index, wrapping around if necessary
+            currentIndex = (currentIndex + 1) % leadership.length;
+        }
+
+        // Initialize the first card
+        showNextCard();
+
+        // Set interval to switch cards
+        setInterval(showNextCard, 3000); // Adjust the interval as needed
+    </script>
+
+</body>
+
+</html>
